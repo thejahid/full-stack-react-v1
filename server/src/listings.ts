@@ -8,7 +8,6 @@ interface Listing {
   numOfBeds: number;
   numOfBaths: number;
   rating: number;
-  favorite: boolean;
 }
 
 export const listings: Listing[] = [
@@ -23,7 +22,6 @@ export const listings: Listing[] = [
     numOfBeds: 1,
     numOfBaths: 2,
     rating: 5,
-    favorite: false,
   },
   {
     id: "002",
@@ -36,7 +34,6 @@ export const listings: Listing[] = [
     numOfBeds: 1,
     numOfBaths: 1,
     rating: 4,
-    favorite: false,
   },
   {
     id: "003",
@@ -49,6 +46,5 @@ export const listings: Listing[] = [
     numOfBeds: 2,
     numOfBaths: 2,
     rating: 3,
-    favorite: false,
   },
 ];
