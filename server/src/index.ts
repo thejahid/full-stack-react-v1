@@ -1,30 +1,43 @@
-import express, { Application } from "express";
-import { ApolloServer } from "apollo-server-express";
+import express from 'express';
 
-import { connectDatabse } from "./database";
-import { typeDefs, resolvers } from "./graphql";
+import { listings } from './listings';
 
-const port = 5000;
+const app = express();
 
-const mount = async (app: Application) => {
-  //connect database
-  const db = await connectDatabse();
+const port = 9000;
 
-  //apollo server
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context: () => ({ db }),
-  });
-  server.applyMiddleware({ app, path: "/api" });
+// bodyparser
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
 
-  app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-  });
+app.get('/', (_req, res) =>
+  res.send('Hello welcome to typescript & mern development!!')
+);
 
-  const listings = await db.listings.find({}).toArray();
+// work with listing
 
-  console.log(listings);
-};
+// get listing
+app.get('/listings', (req, res) => {
+  return res.send(listings);
+});
 
-mount(express());
+// delete listing
+app.post('/delete-listing', (req, res) => {
+  const id: string = req.body.id;
+
+  for (let i = 0; i < listings.length; i++) {
+    if (listings[i].id === id) {
+      return res.send(listings.splice(i, 1));
+    }
+
+    return res.send('failed to delete listing');
+  }
+});
+
+app.listen(port);
+
+console.log(`[app]: Server srunning at ${port}`);
