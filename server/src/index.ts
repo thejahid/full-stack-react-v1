@@ -1,43 +1,45 @@
 import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
 
-import { listings } from './listings';
+import { typeDefs, resolvers } from './graphql';
 
 const app = express();
 
-const port = 9000;
+const port = 8000;
 
-// bodyparser
-app.use(express.json());
-app.use(
-  express.urlencoded({
-    extended: true
-  })
-);
+async function startApolloServer() {
+  // apollo server
+  const server = new ApolloServer({ typeDefs, resolvers });
+  await server.start();
+  server.applyMiddleware({ app, path: '/api' });
 
-app.get('/', (_req, res) =>
-  res.send('Hello welcome to typescript & mern development!!')
-);
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}!!`);
+  });
+}
 
-// work with listing
+startApolloServer();
 
-// get listing
-app.get('/listings', (req, res) => {
-  return res.send(listings);
-});
+// app.get('/', (_req, res) =>
+//   res.send('Hello welcome to typescript & mern development!!')
+// );
 
-// delete listing
-app.post('/delete-listing', (req, res) => {
-  const id: string = req.body.id;
+// // work with listing
 
-  for (let i = 0; i < listings.length; i++) {
-    if (listings[i].id === id) {
-      return res.send(listings.splice(i, 1));
-    }
+// // get listing
+// app.get('/listings', (req, res) => {
+//   return res.send(listings);
+// });
 
-    return res.send('failed to delete listing');
-  }
-});
+// // delete listing
+// app.post('/delete-listing', (req, res) => {
+//   const id: string = req.body.id;
 
-app.listen(port);
+//   for (let i = 0; i < listings.length; i++) {
+//     if (listings[i].id === id) {
+//       return res.send(listings.splice(i, 1));
+//     }
 
-console.log(`[app]: Server srunning at ${port}`);
+//     return res.send('failed to delete listing');
+//   }
+// });
